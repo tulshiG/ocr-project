@@ -11,9 +11,19 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = 'django-insecure-fx#t1l1lin5&z3*vbg)8_%thm7mub^z8jmvg_la%tf1&va^fcx'
-DEBUG = True
-ALLOWED_HOSTS = ['tulshi123.pythonanywhere.com']
+# SECRET_KEY = 'django-insecure-fx#t1l1lin5&z3*vbg)8_%thm7mub^z8jmvg_la%tf1&va^fcx'
+# DEBUG = True
+# ALLOWED_HOSTS = ['tulshi123.pythonanywhere.com']
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
+
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+]
+if os.environ.get("RENDER_EXTERNAL_HOSTNAME"):
+    ALLOWED_HOSTS.append(os.environ["RENDER_EXTERNAL_HOSTNAME"])
 
 # Application definition
 INSTALLED_APPS = [
@@ -28,6 +38,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -78,8 +89,10 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATIC_URL = 'static/'
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Media (uploaded work report images)
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
