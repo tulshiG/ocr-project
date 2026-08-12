@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Work Report OCR</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 16px; }
+        h1 { font-size: 1.4rem; }
+        .msg { padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; }
+        .msg.success { background: #e6f7e6; color: #1a6b1a; }
+        .msg.error { background: #fdeaea; color: #a11; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; font-size: 0.9rem; }
+        .status-done { color: #1a6b1a; }
+        .status-failed { color: #a11; }
+        .status-pending, .status-processing { color: #a70; }
+        form { margin: 20px 0; }
+        button { padding: 8px 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Work Report Upload</h1>
+
+    {% for message in messages %}
+        <div class="msg {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload &amp; Extract</button>
+    </form>
+
+    <h2>Recent Reports</h2>
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Location</th><th>Date</th><th>Status</th><th>Rows</th><th></th></tr>
+        </thead>
+        <tbody>
+        {% for r in reports %}
+            <tr>
+                <td>{{ r.id }}</td>
+                <td>{{ r.location_name|default:"—" }}</td>
+                <td>{{ r.report_date|default:"—" }}</td>
+                <td class="status-{{ r.status }}">{{ r.get_status_display }}</td>
+                <td>{{ r.rows.count }}</td>
+                <td><a href="{% url 'extractor:detail' r.pk %}">View</a></td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="6">No reports uploaded yet.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

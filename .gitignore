@@ -1,0 +1,22 @@
+# Virtual environment — never commit this, recreate via `pip install -r requirements.txt`
+.venv/
+venv/
+env/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+
+# Secrets — never commit API keys or the real secret key
+.env
+
+# OS/editor cruft
+.DS_Store
+*.swp
+.vscode/
+.idea/
